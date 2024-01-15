@@ -31,11 +31,9 @@ def train_model():
     global training_status
     training_status['status'] = 'training'
     try:
-        # Get the selected model from the JSON request
         model_choice = request.json.get('model_choice', 'model')
         
         print(f'training : {model_choice}')
-        # Run the corresponding training file
         subprocess.run(['python', f'{model_choice}_training.py'], check=True)
     except subprocess.CalledProcessError as e:
         print('Error during training:', e)
@@ -45,19 +43,17 @@ def train_model():
 # live streaming 
 
 def predict_emotion(model_path, img_path, confidence_threshold=0.5):
-    # Load the saved model
     if not os.path.isfile(model_path):
         print(f"Error: Model file '{model_path}' not found.")
         return None
 
     loaded_model = load_model(model_path)
 
-    # Load and preprocess the input image
     if not os.path.isfile(img_path):
         print(f"Error: Image file '{img_path}' not found.")
         return None
 
-    input_size = 48  # Adjust based on your model's input size
+    input_size = 48  
 
     # Load the image in color (RGB)
     img_color = cv2.imread(img_path)
@@ -90,7 +86,7 @@ def predict_emotion(model_path, img_path, confidence_threshold=0.5):
 
 
 def mainInstructions(image_path,model_path):
-    # Open the default camera (index 0)
+    # Open the default camera
     camera = cv2.VideoCapture(0)
 
     # Check if the camera is opened successfully
@@ -113,15 +109,6 @@ def mainInstructions(image_path,model_path):
         for (x, y, w, h) in faces:
             # Draw a rectangle around the detected face
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
-
-        # Here, you would implement liveness verification using a deep learning model
-        # For example, you could use a pre-trained Convolutional Neural Network (CNN)
-        # trained on real and fake face images to distinguish between the two.
-
-        # Replace this placeholder with your liveness verification code.
-        # You might need to use libraries like TensorFlow or PyTorch for the CNN.
-        
-        # Write info on live image
         
         font = cv2.FONT_HERSHEY_COMPLEX  # Font type
         font_scale = 0.5  # Font scale
@@ -182,7 +169,7 @@ def mainInstructions(image_path,model_path):
 
 def live_model():
     model_choice = request.form.get('model_choice', 'Custom_model')
-    model_path = f'datasets\Models\{model_choice}.h5'  # Fix the concatenation here
+    model_path = f'models\{model_choice}.h5'  # Fix the concatenation here
     #path of the image that will be saved and entred as input to the model to detect the emotion
     imagePath=r"./compare.jpg"
     mainInstructions(imagePath,model_path)
