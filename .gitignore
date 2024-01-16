@@ -1,3 +1,5 @@
 __pycache__/
 datasets/
 *.h5
+models/
+*.jpg

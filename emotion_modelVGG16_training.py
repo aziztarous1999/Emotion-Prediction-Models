@@ -1,8 +1,7 @@
 from utils import *
 
-
+#Model architecture
 emotion_modelVGG16= Sequential()
-
 # Block 1
 emotion_modelVGG16.add(Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=(48, 48, 1)))
 emotion_modelVGG16.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
@@ -39,18 +38,15 @@ emotion_modelVGG16.add(Dropout(0.5))
 emotion_modelVGG16.add(Dense(7, activation='softmax'))
 emotion_modelVGG16.summary()
 
-# Compile the model
+# Model Compilation
 emotion_modelVGG16.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
 
 
-# Configure Model Checkpoint
-file_s = r'TestTraining/emotion_modelVGG16.h5'
+# Model Compilation
+file_s = r'models/emotion_modelVGG16.h5'
 checkpointer = ModelCheckpoint(file_s, monitor='loss',verbose=1,save_best_only=True,
                                save_weights_only=False,save_freq='epoch')
-
-
 emotion_modelVGG16.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-
 callback_list=[checkpointer]
 historyVGG16 = emotion_modelVGG16.fit(
         train_generator,
@@ -62,16 +58,7 @@ epochs=20,
     shuffle=True,
     callbacks=[callback_list])
 
-
-
-test_generator = val_datagen.flow_from_directory(
-    'test',
-    target_size=(48, 48),
-    batch_size=64,
-    color_mode="grayscale",
-    class_mode='categorical',
-    shuffle=False
-)
+#Model Testing
 
 y_pred = emotion_modelVGG16.predict(test_generator)
 
@@ -85,4 +72,4 @@ print(f'Test Accuracy: {accuracy * 100:.2f}%')
 
 
 emotion_modelVGG16.save(file_s)
-print("Dense Model Training Completed!!!")
+print("VGG16 Model Training Completed!!!")

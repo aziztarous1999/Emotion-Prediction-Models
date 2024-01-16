@@ -1,8 +1,8 @@
 from utils import *
-
+# Model architecture
 emotion_modelVGG16= Sequential()
 
-# Build the model
+
 Googlenet_model = Sequential()
 
 # Convolutional Block 1
@@ -41,13 +41,11 @@ Googlenet_model.add(Dropout(0.5))
 Googlenet_model.add(Dense(7, activation='softmax'))
 Googlenet_model.summary()
 
-# Compile the model
+# Model compilation
 Googlenet_model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.001), metrics=['accuracy'])
-
-fle_s=r'TestTraining/Googlenet_Model.h5'
+fle_s=r'models/Googlenet_Model.h5'
 checkpointer = ModelCheckpoint(fle_s, monitor='loss',verbose=1,save_best_only=True,
                                save_weights_only=False, mode='auto',save_freq='epoch')
-
 callback_list=[checkpointer]
 
 
@@ -61,16 +59,7 @@ epochs=20,
     shuffle=True,
     callbacks=[callback_list])
 
-
-
-test_generator = val_datagen.flow_from_directory(
-    'test',
-    target_size=(48, 48),
-    batch_size=64,
-    color_mode="grayscale",
-    class_mode='categorical',
-    shuffle=False
-)
+#Model Testing
 
 y_pred = Googlenet_model.predict(test_generator)
 

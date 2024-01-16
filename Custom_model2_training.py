@@ -1,5 +1,5 @@
 from utils import *
-# CNN Architecture
+#Model architecture
 input = Input(shape = (48,48,1))
 conv1 = Conv2D(32,(3, 3), padding = 'same', strides=(1, 1), kernel_regularizer=l2(0.001))(input)
 conv1 = Dropout(0.1)(conv1)
@@ -22,21 +22,16 @@ dense_1 = Dense(128,activation='relu')(flatten)
 drop_1 = Dropout(0.2)(dense_1)
 output = Dense(7,activation="sigmoid")(drop_1)
 
-# Model compile
+# Model Compilation
 Custom_Model2 = Model(inputs=input,outputs=output)
-
 Custom_Model2.summary()
-
-# Compile the model
 Custom_Model2.compile(loss='categorical_crossentropy', optimizer=Adam(), metrics=['accuracy'])
-
-fle_s=r'TestTraining/Custom_Model2.h5'
+fle_s=r'models/Custom_Model2.h5'
 checkpointer = ModelCheckpoint(fle_s, monitor='loss',verbose=1,save_best_only=True,
                                save_weights_only=False, mode='auto',save_freq='epoch')
-
-
 callback_list=[checkpointer]
-# Train the model
+
+# Model Training
 history = Custom_Model2.fit_generator(
     train_generator,
     steps_per_epoch=len(train_generator)/8
@@ -44,18 +39,7 @@ history = Custom_Model2.fit_generator(
     validation_data=validation_generator,
     validation_steps=len(validation_generator)/64
 )
-
-
-
-
-test_generator = val_datagen.flow_from_directory(
-    'test',
-    target_size=(48, 48),
-    batch_size=64,
-    color_mode="grayscale",
-    class_mode='categorical',
-    shuffle=False
-)
+#Model Testing
 
 y_pred = Custom_Model2.predict(test_generator)
 

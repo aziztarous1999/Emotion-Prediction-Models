@@ -1,9 +1,4 @@
 import os
-data_folder_path = r"C:\Users\kalil\OneDrive\Bureau\miniProjetIndexation"
-os.chdir(data_folder_path)
-current_directory = os.getcwd()
-print("Current working directory:", current_directory)
-import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten,Activation,Input,MaxPooling2D,Conv2D
 from tensorflow.keras.regularizers import l2
@@ -12,8 +7,7 @@ from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from IPython.display import display, Javascript
 from base64 import b64decode
-from keras.models import load_model,Model
-from keras.preprocessing import image
+from keras.models import Model
 from keras.preprocessing.image import ImageDataGenerator
 import numpy as np
 import matplotlib.pyplot as plt
@@ -21,18 +15,10 @@ from zipfile import ZipFile
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, auc
 import seaborn as sns
 from keras import models, layers, optimizers, utils, losses
-from sklearn.metrics import roc_curve,auc
-from sklearn.metrics import classification_report
-from sklearn.metrics import confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score
 from keras.models import save_model
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import load_model
-import numpy as np
-import matplotlib.pyplot as plt
 import cv2  # OpenCV library for image processing
 from flask import Flask, request
 
@@ -61,6 +47,16 @@ validation_generator = val_datagen.flow_from_directory(
         batch_size=64,
         color_mode="grayscale",
         class_mode='categorical')
+
+# Model Testing
+test_generator = val_datagen.flow_from_directory(
+    val_dir,
+    target_size=(48, 48),
+    batch_size=64,
+    color_mode="grayscale",
+    class_mode='categorical',
+    shuffle=False
+)
 
 # **Data Augmentation**
 train_datagen = ImageDataGenerator(
